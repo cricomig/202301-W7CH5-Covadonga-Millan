@@ -22,7 +22,7 @@ export class UsersMongoRepo implements Repo<User> {
 
   async query(): Promise<User[]> {
     debug('query');
-    const data = await UserModel.find().populate('users');
+    const data = await UserModel.find();
     return data;
   }
 

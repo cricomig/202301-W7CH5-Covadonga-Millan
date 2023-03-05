@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import { Repo } from '../../repository/repository.interface.js';
 import createDebug from 'debug';
 import { HTTPError } from '../../errors/error.js';
-import { Auth, TokenPayload } from '../../helpers/auth.js';
+import { Auth, TokenPayload as PayloadToken } from '../../helpers/auth.js';
 import { User } from '../../entities/user.js';
 const debug = createDebug('CH7:controller:users');
 
@@ -55,7 +55,7 @@ export class UsersController {
         throw new HTTPError(401, 'Unauthorized', 'Email not found');
       if (!(await Auth.compare(req.body.passwd, data[0].passwd)))
         throw new HTTPError(401, 'Unauthorized', 'Password not match');
-      const payload: TokenPayload = {
+      const payload: PayloadToken = {
         id: data[0].id,
         email: data[0].email,
         role: 'admin',
