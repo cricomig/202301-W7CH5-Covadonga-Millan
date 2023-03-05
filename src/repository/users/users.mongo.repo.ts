@@ -3,7 +3,7 @@ import { UserModel } from './users.mongo.model.js';
 import createDebug from 'debug';
 import { User } from '../../entities/user.js';
 import { HTTPError } from '../../errors/error.js';
-const debug = createDebug('W6:repo');
+const debug = createDebug('W7CH5:repo');
 
 export class UsersMongoRepo implements Repo<User> {
   private static instance: UsersMongoRepo;
