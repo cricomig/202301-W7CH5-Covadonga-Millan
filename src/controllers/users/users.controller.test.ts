@@ -55,12 +55,12 @@ describe('Given UsersController', () => {
   describe('When login is called', () => {
     test("Then if there's no email or password next should be called", async () => {
       req.body.passwd = '';
-      await controller.login(req, resp, next);
+      await controller.register(req, resp, next);
       expect(next).toHaveBeenCalled();
     });
 
     test("Then if there's password and email it should search for user and return a token", async () => {
-      await controller.login(req, resp, next);
+      await controller.register(req, resp, next);
       (repo.search as jest.Mock).mockResolvedValue([2]);
       (Auth.compare as jest.Mock).mockResolvedValue(true);
       (Auth.createJWT as jest.Mock).mockResolvedValue('token');
@@ -68,14 +68,14 @@ describe('Given UsersController', () => {
     });
 
     test("Then if there's a password and email and doesn't find a match it should throw an error", async () => {
-      await controller.login(req, resp, next);
+      await controller.register(req, resp, next);
 
       (repo.search as jest.Mock).mockResolvedValue([]);
 
       expect(next).toHaveBeenCalled();
     });
     test('some3', async () => {
-      await controller.login(req, resp, next);
+      await controller.register(req, resp, next);
       (repo.search as jest.Mock).mockResolvedValue([true]);
       (Auth.compare as jest.Mock).mockResolvedValue(false);
 

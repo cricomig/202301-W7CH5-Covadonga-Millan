@@ -12,30 +12,31 @@ export class UsersMongoRepo implements Repo<User> {
     if (!UsersMongoRepo.instance) {
       UsersMongoRepo.instance = new UsersMongoRepo();
     }
-
     return UsersMongoRepo.instance;
   }
 
   private constructor() {
-    debug('Instantiate');
+    debug('Repo:Instantiated');
   }
 
   async query(): Promise<User[]> {
     debug('query');
-    const data = await UserModel.find();
-    return data;
+    const users = await UserModel.find().populate(['friends', 'enemies']);
+    return users;
   }
 
   async queryId(id: string): Promise<User> {
     debug('queryId');
     const data = await UserModel.findById(id);
-    if (!data) throw new HTTPError(404, 'Not found', 'Id not found in queryId');
+    if (!data) throw new HTTPError(404, 'Not Found', 'Id not found in query');
     return data;
   }
 
-  async search(query: { key: string; value: unknown }) {
+  async search(query: { key: string; value: unknown }): Promise<User[]> {
     debug('search');
     const data = await UserModel.find({ [query.key]: query.value });
+    if (!data)
+      throw new HTTPError(404, 'Not Found', `${query.key} not found in search`);
     return data;
   }
 
@@ -50,13 +51,14 @@ export class UsersMongoRepo implements Repo<User> {
     const data = await UserModel.findByIdAndUpdate(info.id, info, {
       new: true,
     });
-    if (!data) throw new HTTPError(404, 'Not found', 'Id not found in update');
+    if (!data) throw new HTTPError(404, 'Not found', 'Id not found for update');
     return data;
   }
 
   async delete(id: string): Promise<void> {
     debug('delete');
     const data = await UserModel.findByIdAndDelete(id);
-    if (!data) throw new HTTPError(404, 'Delete not found', 'Id not possible');
+    if (!data)
+      throw new HTTPError(404, 'Not found', 'Id not found for delete method');
   }
 }
